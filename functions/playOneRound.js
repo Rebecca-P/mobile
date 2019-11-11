@@ -1,4 +1,5 @@
 const Match = require("../models/Match");
+const updateMatch = require("../services/updateMatch");
 
 const winner = [
     ['N','B','A'],//0
@@ -8,15 +9,13 @@ const winner = [
   ]
 //0 --> rock; 1 --> paper; 2 --> scissors
 
-function playOneRound(match)
+async function playOneRound(match)
 {
     const winnerIs = winner[match.choicePlayerA][match.choicePlayerB];
     let nextMatchStatus = new Match(match);
-
-    if(match.currentRound <= 6)
-        nextMatchStatus.currentRound += 1;
-        nextMatchStatus.choicePlayerA = -1;
-        nextMatchStatus.choicePlayerB = -1;
+    nextMatchStatus.currentRound += 1;
+    nextMatchStatus.choicePlayerA = -1;
+    nextMatchStatus.choicePlayerB = -1;
 
     if(winnerIs === 'A')
     {
@@ -33,6 +32,10 @@ function playOneRound(match)
         nextMatchStatus.choicePlayerB = -1;
         nextMatchStatus.winsPlayerA +=1;
     }
+    await updateMatch(match.id_, nextMatchStatus)
+    .then((result) =>{
+        console.log(result.msg)
+    })
 }
 
-export default function playOneRound(playerA, playerB)
+module.exports = playOneRound;

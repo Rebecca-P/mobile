@@ -13,6 +13,7 @@ const getRoom = require("./services/getRoom");
 const createMatch = require("./services/createMatch")
 const updateMatch = require("./services/updateMatch");
 const verifyMatchStatus = require("./functions/verifyMatchStatus");
+const getMatch = require("./services/getMatch");
 
 app.use(cors());
 app.use(express.json()); // for parsing application/json
@@ -84,10 +85,67 @@ app.put("/joinRoom", function(req, res, next) {
 
 app.put("/start", function(req, res, next) {
     const updates = {
+        nbRounds: req.body.nbRounds,
         start: true
     };
 
     updateRoom(req.body.Room_Id, updates)
+    .then(function (createRoomQueryResponse) {
+        res
+            .status(createRoomQueryResponse.statusCode)
+            .send(createRoomQueryResponse.msg);
+        
+        createMatch(req.body.Room_Id, req.body.nbRounds);
+    })
+    .catch(function (err) {
+        res
+            .status(err.statusCode)
+            .send(err.msg);
+    });
+
+
+});
+
+app.put("/submitChoiceA", function(req, res, next) {
+    const updates = {
+        "choicePlayerA": req.body.choicePlayerA
+    }
+    updateMatch(req.body.matchId, updates)
+    .then(function (updateMatchQueryResponse) {
+        res
+            .status(updateMatchQueryResponse.statusCode)
+            .send(updateMatchQueryResponse.msg);
+
+        verifyMatchStatus(req.body.matchId);
+            
+    }).catch(function (err) {
+        res
+            .status(err.statusCode)
+            .send(err.msg);
+    });
+});
+
+app.put("/submitChoiceB", function(req, res, next) {
+    const updates = {
+        "choicePlayerB": req.body.choicePlayerB
+    }
+    updateMatch(req.body.matchId, updates)
+    .then(function (updateMatchQueryResponse) {
+        res
+            .status(updateMatchQueryResponse.statusCode)
+            .send(updateMatchQueryResponse.msg);
+
+        verifyMatchStatus(req.body.matchId);
+            
+    }).catch(function (err) {
+        res
+            .status(err.statusCode)
+            .send(err.msg);
+    });
+});
+
+app.get("/getRoom", function(req, res, next) {
+    getRoom(req.body.Room_Id)
     .then(function (createRoomQueryResponse) {
         res
             .status(createRoomQueryResponse.statusCode)
@@ -99,48 +157,10 @@ app.put("/start", function(req, res, next) {
             .send(err.msg);
     });
 
-    await createMatch(req.body.Room_Id, req.body.nbRounds);
-
 });
 
-app.put("/submitChoiceA", function(req, res, next) {
-    const updates = {
-        "choicePlayerA": req.body.choicePlayerA
-    }
-    await updateMatch(req.body.matchId, updates)
-    .then(function (updateMatchQueryResponse) {
-        res
-            .status(updateMatchQueryResponse.statusCode)
-            .send(updateMatchQueryResponse.msg);
-            
-    }).catch(function (err) {
-        res
-            .status(err.statusCode)
-            .send(err.msg);
-    });
-    verifyMatchStatus(req.body.matchId);
-});
-
-app.put("/submitChoiceB", function(req, res, next) {
-    const updates = {
-        "choicePlayerB": req.body.choicePlayerB
-    }
-    await updateMatch(req.body.matchId, updates)
-    .then(function (updateMatchQueryResponse) {
-        res
-            .status(updateMatchQueryResponse.statusCode)
-            .send(updateMatchQueryResponse.msg);
-            
-    }).catch(function (err) {
-        res
-            .status(err.statusCode)
-            .send(err.msg);
-    });
-    verifyMatchStatus(req.body.matchId);
-});
-
-app.get("/getRoom", function(req, res, next) {
-    getRoom(req.body.Room_Id)
+app.get("/getMatch", function(req, res, next) {
+    getMatch(req.body.matchId)
     .then(function (createRoomQueryResponse) {
         res
             .status(createRoomQueryResponse.statusCode)

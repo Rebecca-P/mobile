@@ -2,7 +2,7 @@ const Match = require("../models/Match");
 const getRoom = require("../services/getRoom");
 
 async function createMatch(Room_Id, nbRounds) {
-    tmpMatch = new WaitingRoom();
+    tmpMatch = new Match();
     try{
         await getRoom(Room_Id)
         .then(function(result) {

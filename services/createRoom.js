@@ -6,6 +6,7 @@ async function createRoom(creatorId) {
     try{
         tmpRoom.playerA_Id = creatorId;
         tmpRoom.playerB_Id = null;
+        tmpRoom.nbRounds = 0;
         tmpRoom.Room_Id = await generateRoomId();
         tmpRoom.start = false;
 

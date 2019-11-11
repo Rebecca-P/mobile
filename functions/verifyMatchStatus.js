@@ -1,11 +1,12 @@
 const getMatch = require("../services/getMatch");
-const playOneRound = require("../services/playOneRound");
+const playOneRound = require("./playOneRound");
 
-async function verifyMatchStatus(matchId)
+function verifyMatchStatus(matchId)
 {
-    await getMatch(matchId)
+    getMatch(matchId)
     .then((result) => {
-        if(result.match.choicePlayerA != -1 && result.match.choicePlayerB != -1)
+        console.log(result.match);
+        if((result.match.choicePlayerA != -1) && (result.match.choicePlayerB != -1))
         {
             playOneRound(result.match);
         }
