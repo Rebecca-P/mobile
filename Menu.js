@@ -3,8 +3,11 @@ import React, { Component } from 'react';
 import {
   View,
   StyleSheet,
+  BackHandler,
+  Image,
+  ImageBackground
 } from 'react-native';
-import { Container, Header, Content, List, ListItem, Text, Left, Right, Icon , Button } from 'native-base';
+import { Container, Header, Content, List, ListItem, Text, Left, Right, Icon , Button} from 'native-base';
 import styles from './styles'
 
 export default class Menu_ extends Component {
@@ -13,40 +16,36 @@ export default class Menu_ extends Component {
     super(props);
     
   }
+ 
 
   render() {
+    console.disableYellowBox = true;
+    const { navigate } = this.props.navigation;
     return (
-      <View>
-        <List>
-          <ListItem>
-            <Button transparent onPress={() => this.props.navigation.navigate('Fighter_')}>
-              <Text>
-                Partie contre l'IA
-              </Text>
-            </Button>
-          </ListItem>
-          <ListItem>
-            <Button transparent onPress={() => this.props.navigation.navigate('Fighter_')}>
-              <Text>
-                Partie contre un(e) ami(e)
-              </Text>
-            </Button>
-          </ListItem>
-          <ListItem>
-            <Button transparent onPress={() => this.props.navigation.navigate('Fighter_')}>
-              <Text>
-                Profil
-              </Text>
-            </Button>
-          </ListItem>
-          <ListItem>
-            <Button transparent onPress={() => this.props.navigation.goBack()}>
-              <Text>
-                Quitter
-              </Text>
-            </Button>
-          </ListItem>
-        </List>
+
+      <View style={styles.standar_box}>
+        <ImageBackground source={require('./Background/choix_menu.png')} style={styles.background}>
+        <Image style={styles.logo}  source={require('./Background/logo.png')}></Image>
+          <List style={styles.standar_box}>
+            <ListItem>
+              <Button transparent onPress={() => this.props.navigation.navigate('Fighter_')}>
+                <Text style={{color: 'white'}}>
+                  Partie contre l'IA
+                </Text>
+              </Button>
+            </ListItem>
+            
+            <ListItem>
+              <Button transparent onPress={() =>BackHandler.exitApp()}>
+                <Text style={{color: 'white'}}>
+                  Quitter
+                </Text>
+              </Button>
+            </ListItem>
+          </List>
+          
+        </ImageBackground>
+        
       </View>
     );
   }
